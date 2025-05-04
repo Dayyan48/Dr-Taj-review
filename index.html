@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Taj Sir Reviews - Apollo Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 text-white p-4 sticky top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold">Dr. Taj Sir Reviews</a>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="hover:text-gray-200">Home</a></li>
+                <li><a href="#submit-review" class="hover:text-gray-200">Submit Review</a></li>
+                <li><a href="#reviews" class="hover:text-gray-200">View Reviews</a></li>
+                <li><button id="host-login-btn" class="hover:text-gray-200">Host Login</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Host Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <divextended
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 class="text-2xl font-bold mb-4">Host Login</h2>
+            <input type="password" id="host-password" class="w-full p-2 border rounded-lg mb-4" placeholder="Enter password">
+            <div class="flex justify-end space-x-2">
+                <button id="login-submit" class="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700">Login</button>
+                <button id="login-cancel" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-blue-500 text-white py-20">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Dr. Taj Sir - Apollo Hospital</h1>
+            <p class="text-lg md:text-xl mb-6">Share your experience with Dr. Taj Sir, a dedicated physician at Apollo Hospital.</p>
+            <a href="#submit-review" class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-200">Write a Review</a>
+        </div>
+    </section>
+
+    <!-- Review Submission Form -->
+    <section id="submit-review" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Submit Your Review</h2>
+            <div class="max-w-lg mx-auto">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 font-semibold mb-2">Your Name</label>
+                    <input type="text" id="name" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required>
+                </div>
+                <div class="mb-4">
+                    <label for="rating" class="block text-gray-700 font-semibold mb-2">Rating (1-5)</label>
+                    <select id="rating" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="review" class="block text-gray-700 font-semibold mb-2">Your Review</label>
+                    <textarea id="review" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="5" placeholder="Share your experience..." required></textarea>
+                </div>
+                <button id="submit-btn" class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700">Submit Review</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Patient Reviews</h2>
+            <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Reviews will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Dr. Taj Sir Reviews - Apollo Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Functionality -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Host login modal handling
+        const loginModal = document.getElementById('login-modal');
+        const hostLoginBtn = document.getElementById('host-login-btn');
+        const loginSubmit = document.getElementById('login-submit');
+        const loginCancel = document.getElementById('login-cancel');
+        const hostPassword = document.getElementById('host-password');
+
+        let isHostLoggedIn = false;
+        const HOST_PASSWORD = 'taj123'; // Hardcoded for simplicity
+
+        hostLoginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+        });
+
+        loginCancel.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            hostPassword.value = '';
+        });
+
+        loginSubmit.addEventListener('click', () => {
+            if (hostPassword.value === HOST_PASSWORD) {
+                isHostLoggedIn = true;
+                loginModal.classList.add('hidden');
+                hostPassword.value = '';
+                hostLoginBtn.textContent = 'Logout';
+                alert('Logged in as Dr. Taj Sir');
+                displayReviews(); // Refresh reviews to show reply forms
+            } else {
+                alert('Incorrect password');
+            }
+        });
+
+        hostLoginBtn.addEventListener('click', () => {
+            if (isHostLoggedIn) {
+                isHostLoggedIn = false;
+                hostLoginBtn.textContent = 'Host Login';
+                alert('Logged out');
+                displayReviews(); // Refresh reviews to hide reply forms
+            }
+        });
+
+        // Load reviews from localStorage
+        let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+        // Function to display reviews
+        function displayReviews() {
+            const reviewsContainer = document.getElementById('reviews-container');
+            reviewsContainer.innerHTML = '';
+            reviews.forEach((review, index) => {
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'bg-white p-6 rounded-lg shadow-md';
+                reviewCard.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-2">${review.name}</h3>
+                    <p class="text-yellow-500 mb-2">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
+                    <p class="text-gray-600 mb-4">${review.text}</p>
+                    ${review.reply ? `<p class="text-gray-800 italic border-l-4 border-blue-500 pl-4">"${review.reply}" <br>— Dr. Taj Sir</p>` : ''}
+                    ${isHostLoggedIn ? `
+                        <div class="mt-4">
+                            <textarea class="w-full p-2 border rounded-lg reply-textarea" placeholder="Add a reply..." rows="3">${review.reply || ''}</textarea>
+                            <button class="mt-2 bg-blue-600 text-white p-2 rounded-lg reply-btn" data-index="${index}">Submit Reply</button>
+                        </div>
+                    ` : ''}
+                `;
+                reviewsContainer.appendChild(reviewCard);
+            });
+
+            // Add event listeners for reply buttons
+            document.querySelectorAll('.reply-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = btn.dataset.index;
+                    const replyText = btn.previousElementSibling.value.trim();
+                    if (replyText) {
+                        reviews[index].reply = replyText;
+                        localStorage.setItem('reviews', JSON.stringify(reviews));
+                        displayReviews();
+                    } else {
+                        alert('Please enter a reply.');
+                    }
+                });
+            });
+        }
+
+        // Initial display of reviews
+        displayReviews();
+
+        // Handle review form submission
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const name = document.getElementById('name').value.trim();
+            const rating = document.getElementById('rating').value;
+            const reviewText = document.getElementById('review').value.trim();
+
+            if (name && rating && reviewText) {
+                const newReview = {
+                    name: name,
+                    rating: parseInt(rating),
+                    text: reviewText
+                };
+                reviews.push(newReview);
+                localStorage.setItem('reviews', JSON.stringify(reviews));
+                displayReviews();
+
+                // Clear form
+                document.getElementById('name').value = '';
+                document.getElementById('rating').value = '5';
+                document.getElementById('review').value = '';
+
+                // Scroll to reviews section
+                document.getElementById('reviews').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+    </script>
+</body>
+</html>
